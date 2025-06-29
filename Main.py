@@ -4,7 +4,7 @@ from menu import ejecutar_menu
 def main():
     pygame.init()
     pantalla = pygame.display.set_mode((800, 600))
-    pygame.display.set_caption("Mata o muere")
+    pygame.display.set_caption("A definir")
     ejecutar_menu(pantalla)
     pygame.quit()
 

@@ -12,15 +12,9 @@ def esperar_escape():
                 return
 
 def iniciar_juego(pantalla):
-    pantalla.fill((0, 0, 0))
-    render_texto(pantalla, "Jugando...", 300, 250)
-    pygame.display.flip()
-    pygame.time.wait(2000)
-
-    import random
-    puntaje = random.randint(100, 1000)
-    nombre = pedir_nombre(pantalla)
-    guardar_puntaje_txt(nombre, puntaje)
+    from juego import jugar
+    pygame.mixer.music.stop()  # Detener música del menú
+    jugar(pantalla)
 
 def pedir_nombre(pantalla):
     fuente = pygame.font.SysFont("arial", 32)
@@ -93,8 +87,9 @@ def mostrar_como_jugar(pantalla):
 def mostrar_creditos(pantalla):
     pantalla.fill((0, 0, 0))
     render_texto(pantalla, "Créditos", 320, 50)
-    render_texto(pantalla, "Hecho por ", 180, 200)
-    render_texto(pantalla, "", 120, 250)
+    render_texto(pantalla, "Hecho por Miqueas", 200, 200)
+    render_texto(pantalla, "Materia: Programación 1", 180, 250)
+    render_texto(pantalla, "UTN - Facultad Regional Avellaneda", 100, 300)
     render_texto(pantalla, "Presiona ESC para volver", 220, 500)
     pygame.display.flip()
     esperar_escape()
