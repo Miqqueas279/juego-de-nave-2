@@ -87,7 +87,7 @@ def mostrar_como_jugar(pantalla):
 def mostrar_creditos(pantalla):
     pantalla.fill((0, 0, 0))
     render_texto(pantalla, "Créditos", 320, 50)
-    render_texto(pantalla, "Hecho por Miqueas", 200, 200)
+    render_texto(pantalla, "Hecho por ", 200, 200)
     render_texto(pantalla, "Materia: Programación 1", 180, 250)
     render_texto(pantalla, "UTN - Facultad Regional Avellaneda", 100, 300)
     render_texto(pantalla, "Presiona ESC para volver", 220, 500)

@@ -15,7 +15,7 @@ def crear_enemigo(zombie_img):
     rect = pygame.Rect(ANCHO, y, zombie_img.get_width(), zombie_img.get_height())
     return {
         "rect": rect,
-        "vel": -4,
+        "vel": -2,
         "img": zombie_img
     }
 
@@ -25,7 +25,7 @@ def crear_disparo(jugador):
     rect = pygame.Rect(x, y, 10, 5)
     return {
         "rect": rect,
-        "vel": 8,
+        "vel": 5,
         "color": COLOR_DISPARO
     }
 
