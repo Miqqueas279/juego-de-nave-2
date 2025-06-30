@@ -4,7 +4,6 @@ from utils import render_texto, guardar_puntaje_txt
 from acciones import pedir_nombre
 
 ANCHO, ALTO = 800, 600
-COLOR_FONDO = (15, 15, 15)
 COLOR_DISPARO = (255, 255, 0)
 
 def cargar_imagen(path, ancho, alto):
@@ -34,14 +33,19 @@ def jugar(pantalla):
     reloj = pygame.time.Clock()
     fuente = pygame.font.SysFont("arial", 28)
 
-    # Cargar imágenes
-    jugador_img = cargar_imagen("recursos/player.png", 40, 40)
-    zombie_img = cargar_imagen("recursos/zombie.png", 40, 40)
-
     # 🎵 Música del juego
     pygame.mixer.music.load("recursos/horror-258261.mp3")
     pygame.mixer.music.set_volume(0.5)
     pygame.mixer.music.play(-1)
+
+    # 🖼️ Cargar fondo
+    fondo = pygame.image.load("recursos/calle.png").convert()
+    fondo = pygame.transform.scale(fondo, (ANCHO, ALTO))
+
+    # 🧍‍♂️ Cargar sprites
+    jugador_img = cargar_imagen("recursos/player.png", 40, 40)
+    zombie_img = cargar_imagen("recursos/zombie.png", 40, 40)
+    corazon_img = cargar_imagen("recursos/corrazon.png", 32, 32)
 
     jugador = pygame.Rect(50, ALTO // 2, jugador_img.get_width(), jugador_img.get_height())
     enemigos = []
@@ -53,7 +57,8 @@ def jugar(pantalla):
 
     corriendo = True
     while corriendo:
-        pantalla.fill(COLOR_FONDO)
+        # 🖼️ Dibujar fondo
+        pantalla.blit(fondo, (0, 0))
 
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
@@ -61,6 +66,7 @@ def jugar(pantalla):
                 pygame.quit()
                 return
 
+        # Movimiento jugador
         teclas = pygame.key.get_pressed()
         if teclas[pygame.K_UP] and jugador.top > 0:
             jugador.y -= 5
@@ -70,13 +76,16 @@ def jugar(pantalla):
             disparos.append(crear_disparo(jugador))
             tiempo_disparo = pygame.time.get_ticks()
 
+        # Mover disparos
         for d in disparos:
             d["rect"].x += d["vel"]
         disparos = [d for d in disparos if d["rect"].x <= ANCHO]
 
+        # Crear enemigos
         if random.random() < 0.03:
             enemigos.append(crear_enemigo(zombie_img))
 
+        # Mover enemigos
         for e in enemigos[:]:
             e["rect"].x += e["vel"]
             if e["rect"].colliderect(jugador):
@@ -85,6 +94,7 @@ def jugar(pantalla):
             elif e["rect"].right < 0:
                 enemigos.remove(e)
 
+        # Colisiones disparo-enemigo
         for d in disparos[:]:
             for e in enemigos[:]:
                 if d["rect"].colliderect(e["rect"]):
@@ -93,18 +103,28 @@ def jugar(pantalla):
                     disparos.remove(d)
                     break
 
+        # Dibujar jugador
         pantalla.blit(jugador_img, jugador.topleft)
+
+        # Dibujar enemigos
         for e in enemigos:
             pantalla.blit(e["img"], e["rect"].topleft)
+
+        # Dibujar disparos
         for d in disparos:
             pygame.draw.rect(pantalla, d["color"], d["rect"])
 
+        # Puntaje
         render_texto(pantalla, f"Puntaje: {puntaje}", 10, 10, fuente)
-        render_texto(pantalla, f"Vidas: {vidas}", 10, 40, fuente)
+
+        # Vidas con corazones
+        for i in range(vidas):
+            pantalla.blit(corazon_img, (10 + i * 40, 50))
 
         pygame.display.flip()
         reloj.tick(60)
 
+        # Fin del juego
         if vidas <= 0:
             pygame.mixer.music.stop()
             nombre = pedir_nombre(pantalla)
